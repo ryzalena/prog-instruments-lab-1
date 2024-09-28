@@ -2,7 +2,6 @@ import sys
 import os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QLineEdit,
                              QPushButton, QComboBox, QWidget, QFileDialog)
-from PyQt5.QtGui import QFont
 from PyQt5 import QtGui
 from PIL import Image, ImageDraw, ImageFont
 import pandas as pd
@@ -18,11 +17,9 @@ class Window(QMainWindow):
         self.setGeometry(200, 200, 800, 500)
         self.setWindowIcon(QtGui.QIcon('logo.svg'))
 
-        # Создаем центральный виджет
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
 
-        # Инициализируем элементы интерфейса
         self.initUI()
 
     def initUI(self):
@@ -111,9 +108,7 @@ class Window(QMainWindow):
 
     def users(self):
 
-        # self.text.hide()
-        # self.btn.hide()
-        # self.btn2.hide()
+
 
         self.text21.hide()
         self.text22.hide()
@@ -125,17 +120,7 @@ class Window(QMainWindow):
         self.btn6.hide()
         self.btn7.hide()
 
-        #
-        # self.base_image_path, _ = QFileDialog.getOpenFileName(self, 'Выберите изображение для основы грамоты', '', '*.png')
-        # if not self.base_image_path:
-        #     print("No image selected. Exiting.")
-        #     sys.exit()
-        #
-        #
-        # self.data_path, _ = QFileDialog.getOpenFileName(self, 'Выберите файл Excel для сбора данных', '', '*.xlsx')
-        # if not self.data_path:
-        #     print("No Excel file selected. Exiting.")
-        #     sys.exit()
+
 
         self.text11 = QLabel(
             "Вам необходимо задать X и Y-координаты для расположения текста.",
@@ -321,13 +306,13 @@ class Window(QMainWindow):
         self.preparation(x, kid, place, teacher, school, font_name, font_name2,
                          font_name3, font_name4, size1, size2, size3, size4)
 
-    def split_text(self, text, font, size):
+    def split_text(self, text):
         words = text.split(' ')
         lines = []
         current_line = ''
 
         for word in words:
-            if len(current_line) + len(word) + 1 > 25:  # Add 1 for space
+            if len(current_line) + len(word) + 1 > 25:
                 lines.append(current_line)
                 current_line = word
             else:
@@ -382,12 +367,7 @@ class Window(QMainWindow):
             print(f"Не удалось загрузить шрифт: {font_path4}")
             return
 
-        # folder_path = QFileDialog.getExistingDirectory(None, "Выберите папку для сохранения грамот")
-        #
-        # # Проверяем, была ли выбрана папка
-        # if not folder_path:
-        #     print("Папка не выбрана.")
-        #     return
+
 
         for index, row in data.iterrows():
             image = Image.open(image_path)
@@ -434,7 +414,7 @@ class Window(QMainWindow):
                 draw.text((x, y), line, anchor="ms", font=font,
                           fill="black")
                 y += height
-            # Формируем имя файла в нужной последовательности
+
             filename = f"{school_name}_{teacher_name}_{author_name}.png"
 
             # Заменяем недопустимые символы в имени файла
@@ -443,18 +423,14 @@ class Window(QMainWindow):
             for char in invalid_chars:
                 filename = filename.replace(char, '')
 
-            # Заменяем пробелы на подчеркивания
-            # filename = filename.replace(' ', '_')
+
 
             if len(filename) > 200:
                 filename = filename[:200]
-            # Убедимся, что файл имеет расширение .png
             if not filename.lower().endswith('.png'):
                 filename = f"{filename}.png"
-            # Сохраняем изображение с правильным именем файла
             full_path = os.path.join(folder, filename)
 
-            # Сохраняем изображение с правильным именем файла в выбранной папке
             image.save(full_path)
 
         self.text6 = QLabel("Грамоты созданы", self)
@@ -524,7 +500,6 @@ class Window(QMainWindow):
                 'Полное наименование образовательного учреждения'].replace(
                 "\n", " ")
 
-            # Создание нового документа Word
             doc = Document(self.word_file)
 
             p6 = doc.paragraphs[3]
@@ -549,7 +524,6 @@ class Window(QMainWindow):
             run_teacher.font.name = 'Times New Roman'
             run_teacher.font.bold = True
 
-            # Сохранение нового документа
             filename = f"{school_name}_{teacher_name}_{author_name}.docx"
 
             # Заменяем недопустимые символы в имени файла
@@ -558,21 +532,15 @@ class Window(QMainWindow):
             for char in invalid_chars:
                 filename = filename.replace(char, '')
 
-            # Заменяем пробелы на подчеркивания
-            # filename = filename.replace(' ', '_')
+
 
             if len(filename) > 200:
                 filename = filename[:200]
-            # Убедимся, что файл имеет расширение .png
             if not filename.lower().endswith('.docx'):
                 filename = f"{filename}.docx"
-            # Сохраняем изображение с правильным именем файла
             full_path = os.path.join(folder, filename)
 
-            # Сохраняем изображение с правильным именем файла в выбранной папке
-            # image.save(full_path)
 
-            # new_doc_path = f'new_document_{index + 1}.docx'
             doc.save(full_path)
 
         self.text6 = QLabel("Грамоты созданы", self)
