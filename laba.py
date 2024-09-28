@@ -28,14 +28,14 @@ class Window(QMainWindow):
         self.btn = QPushButton("Пользовательские", self)
         self.btn.setFixedWidth(150)
         self.btn.move(100, 150)
-        self.btn.clicked.connect(self.user)
+        self.btn.clicked.connect(self.selecting_documents_for_the_user)
 
         self.btn2 = QPushButton("Городские", self)
         self.btn2.setFixedWidth(150)
         self.btn2.move(400, 150)
-        self.btn2.clicked.connect(self.city)
+        self.btn2.clicked.connect(self.selecting_documents_for_the_city)
 
-    def user(self):
+    def selecting_documents_for_the_user(self):
         self.text.hide()
         self.btn.hide()
         self.btn2.hide()
@@ -67,7 +67,7 @@ class Window(QMainWindow):
         self.btn7 = QPushButton("Далее", self)
         self.btn7.setFixedWidth(400)
         self.btn7.move(100, 300)
-        self.btn7.clicked.connect(self.users)
+        self.btn7.clicked.connect(self.users_diploms)
         self.btn7.show()
 
     def load_png_file(self):
@@ -98,7 +98,7 @@ class Window(QMainWindow):
         self.text24.adjustSize()
         self.text24.show()
 
-    def users(self):
+    def users_diploms(self):
         self.text21.hide()
         self.text22.hide()
         self.text23.hide()
@@ -290,8 +290,10 @@ class Window(QMainWindow):
         size3 = self.size_combo3.currentText()
         size4 = self.size_combo4.currentText()
 
-        self.preparation(x, kid, place, teacher, school, font_name, font_name2,
-                         font_name3, font_name4, size1, size2, size3, size4)
+        self.creating_diplomas_for_users(x, kid, place, teacher, school,
+                                         font_name, font_name2, font_name3,
+                                         font_name4, size1, size2, size3,
+                                         size4)
 
     def split_text(self, text):
         words = text.split(' ')
@@ -313,7 +315,7 @@ class Window(QMainWindow):
 
         return lines
 
-    def preparation(self, x, kid, place, teacher, school, font_name,
+    def creating_diplomas_for_users(self, x, kid, place, teacher, school, font_name,
                     font_name2, font_name3, font_name4, size1, size2, size3,
                     size4):
         x = float(x)
@@ -421,7 +423,7 @@ class Window(QMainWindow):
         self.text6.adjustSize()
         self.text6.show()
 
-    def city(self):
+    def selecting_documents_for_the_city(self):
         self.text.hide()
         self.btn.hide()
         self.btn2.hide()
@@ -455,7 +457,7 @@ class Window(QMainWindow):
         self.btn7 = QPushButton("Далее", self)
         self.btn7.setFixedWidth(400)
         self.btn7.move(100, 300)
-        self.btn7.clicked.connect(self.process_files2)
+        self.btn7.clicked.connect(self.creating_diplomas_for_city)
         self.btn7.show()
 
     def load_word_file(self):
@@ -468,7 +470,7 @@ class Window(QMainWindow):
         self.text24.adjustSize()
         self.text24.show()
 
-    def process_files2(self):
+    def creating_diplomas_for_city(self):
         data = pd.read_excel(self.excel_file)
         folder = self.save_folder
 
