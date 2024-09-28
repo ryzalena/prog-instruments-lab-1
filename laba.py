@@ -12,11 +12,9 @@ from docx.shared import Pt
 class Window(QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
-
         self.setWindowTitle("Автозаполнение грамот для ЦВО Творчество")
         self.setGeometry(200, 200, 800, 500)
         self.setWindowIcon(QtGui.QIcon('logo.svg'))
-
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
 
@@ -73,7 +71,6 @@ class Window(QMainWindow):
         self.btn7.show()
 
     def load_png_file(self):
-
         self.png_file, _ = QFileDialog.getOpenFileName(self, "Выберите PNG "
                                                              "файл", "",
                                                        "png Files (*.png)")
@@ -93,23 +90,15 @@ class Window(QMainWindow):
         self.text23.show()
 
     def save_folder(self):
-        # Открываем диалог выбора папки
         self.save_folder = QFileDialog.getExistingDirectory(self,
                                                             "Выберите папку "
                                                             "для сохранения")
-
         self.text24 = QLabel(f"Выбрана папка: {self.save_folder}", self)
         self.text24.move(100, 260)
         self.text24.adjustSize()
         self.text24.show()
 
-    def process_files(self):
-        pass
-
     def users(self):
-
-
-
         self.text21.hide()
         self.text22.hide()
         self.text23.hide()
@@ -119,8 +108,6 @@ class Window(QMainWindow):
         self.btn5.hide()
         self.btn6.hide()
         self.btn7.hide()
-
-
 
         self.text11 = QLabel(
             "Вам необходимо задать X и Y-координаты для расположения текста.",
@@ -367,8 +354,6 @@ class Window(QMainWindow):
             print(f"Не удалось загрузить шрифт: {font_path4}")
             return
 
-
-
         for index, row in data.iterrows():
             image = Image.open(image_path)
             draw = ImageDraw.Draw(image)
@@ -422,8 +407,6 @@ class Window(QMainWindow):
                              '\\', '\n', '(', ')', '№', '«', '»', ',', '-']
             for char in invalid_chars:
                 filename = filename.replace(char, '')
-
-
 
             if len(filename) > 200:
                 filename = filename[:200]
@@ -486,7 +469,6 @@ class Window(QMainWindow):
         self.text24.show()
 
     def process_files2(self):
-        # Чтение данных из Excel
         data = pd.read_excel(self.excel_file)
         folder = self.save_folder
 
@@ -532,14 +514,11 @@ class Window(QMainWindow):
             for char in invalid_chars:
                 filename = filename.replace(char, '')
 
-
-
             if len(filename) > 200:
                 filename = filename[:200]
             if not filename.lower().endswith('.docx'):
                 filename = f"{filename}.docx"
             full_path = os.path.join(folder, filename)
-
 
             doc.save(full_path)
 
@@ -552,7 +531,6 @@ class Window(QMainWindow):
 def application():
     app = QApplication(sys.argv)
     app.setStyleSheet('QLabel { font: bold }')
-
     win = Window()
     win.show()
     sys.exit(app.exec_())
