@@ -2,6 +2,7 @@ import sys
 import os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QLineEdit,
                              QPushButton, QComboBox, QWidget, QFileDialog)
+
 from PyQt5 import QtGui
 from PIL import Image, ImageDraw, ImageFont
 import pandas as pd
@@ -11,6 +12,15 @@ from docx.shared import Pt
 
 class Window(QMainWindow):
     def __init__(self):
+        """
+        Инициализация главного окна приложения.
+
+        Аргументы:
+        None
+
+        Возвращает:
+        None
+        """
         super(Window, self).__init__()
         self.setWindowTitle("Автозаполнение грамот для ЦВО Творчество")
         self.setGeometry(200, 200, 800, 500)
@@ -21,6 +31,15 @@ class Window(QMainWindow):
         self.initUI()
 
     def initUI(self):
+        """
+        Инициализация пользовательского интерфейса главного окна.
+
+        Аргументы:
+        None
+
+        Возвращает:
+        None
+        """
         self.text = QLabel("Выберите, какой тип грамот надо создать", self)
         self.text.move(100, 100)
         self.text.adjustSize()
@@ -36,6 +55,21 @@ class Window(QMainWindow):
         self.btn2.clicked.connect(self.selecting_documents_for_the_city)
 
     def selecting_documents_for_the_user(self):
+        """
+        Метод для отображения интерфейса выбора файлов и папки
+        пользователем.
+
+        Атрибуты:
+        self.text : QLabel - текстовое поле для вывода информации
+        пользователю.
+        self.btn4 : QPushButton - кнопка для выбора PNG файла.
+        self.btn5 : QPushButton - кнопка для выбора Excel файла.
+        self.btn6 : QPushButton - кнопка для выбора папки для сохранения.
+        self.btn7 : QPushButton - кнопка для продолжения к следующему шагу.
+
+        Возвращает:
+        None
+        """
         self.text.hide()
         self.btn.hide()
         self.btn2.hide()
@@ -71,6 +105,15 @@ class Window(QMainWindow):
         self.btn7.show()
 
     def load_png_file(self):
+        """
+        Метод для загрузки PNG файла через диалог выбора файла.
+
+        Атрибуты:
+        self.png_file : str - путь к выбранному PNG файлу.
+        self.text22 : QLabel - метка, отображающая путь к выбранному PNG файлу.
+        Возвращает:
+        None
+        """
         self.png_file, _ = QFileDialog.getOpenFileName(self, "Выберите PNG "
                                                              "файл", "",
                                                        "png Files (*.png)")
@@ -80,6 +123,17 @@ class Window(QMainWindow):
         self.text22.show()
 
     def load_excel_file(self):
+        """
+        Метод для загрузки Excel файла через диалог выбора файла.
+
+        Атрибуты:
+        self.excel_file : str - путь к выбранному Excel файлу.
+        self.text23 : QLabel - метка, отображающая путь к выбранному Excel
+        файлу.
+
+        Возвращает:
+        None
+        """
         self.excel_file, _ = QFileDialog.getOpenFileName(self, "Выберите Excel"
                                                                " файл", "",
                                                          "Excel Files (*.xlsx)"
@@ -90,6 +144,16 @@ class Window(QMainWindow):
         self.text23.show()
 
     def save_folder(self):
+        """
+        Метод для выбора папки для сохранения через диалог выбора папки.
+
+        Атрибуты:
+        self.save_folder : str - путь к выбранной папке для сохранения.
+        self.text24 : QLabel - метка, отображающая путь к выбранной папке.
+
+        Возвращает:
+        None
+        """
         self.save_folder = QFileDialog.getExistingDirectory(self,
                                                             "Выберите папку "
                                                             "для сохранения")
@@ -99,6 +163,20 @@ class Window(QMainWindow):
         self.text24.show()
 
     def users_diploms(self):
+        """
+        Метод для отображения интерфейса ввода координат и шрифтов для
+        генерации дипломов.
+
+        Элементы интерфейса:
+        - QLabel для инструкций по вводу координат;
+        - QLineEdit для ввода значений координат (X и Y);
+        - QComboBox для выбора шрифта и его размера;
+        - QLineEdit для ввода ФИО ребенка и педагога;
+        - Eлементы для ввода названия образовательного учреждения.
+
+        Возвращает:
+        None
+        """
         self.text21.hide()
         self.text22.hide()
         self.text23.hide()
@@ -253,10 +331,16 @@ class Window(QMainWindow):
         self.btn3 = QPushButton("Сгенерировать", self)
         self.btn3.setFixedWidth(200)
         self.btn3.move(100, 375)
-        self.btn3.clicked.connect(self.read_and_pass_data)
+        self.btn3.clicked.connect(self.creating_diplomas_for_users)
         self.btn3.show()
 
     def list_fonts(self):
+        """
+        Метод для получения списка доступных шрифтов на системе.
+
+        Возвращает:
+        Список полных путей к файлам шрифтов.
+        """
         font_dirs = [
             "C:\\Windows\\Fonts",  # Windows
             "/usr/share/fonts",  # Linux
@@ -275,7 +359,45 @@ class Window(QMainWindow):
                             fonts.append(os.path.join(root, file))
         return fonts
 
-    def read_and_pass_data(self):
+
+    def split_text(self, text):
+        """
+        Метод для раздела заданного текста на строки, у которых длина не
+        превышает 30 символов.
+
+        Параметры:
+        text (str): Текст, который необходимо разбить на строки.
+
+        Возвращает:
+        list: Список строк, каждая из которых не превышает 30 символов.
+        """
+        words = text.split(' ')
+        lines = []
+        current_line = ''
+
+        for word in words:
+            if len(current_line) + len(word) + 1 > 30:
+                lines.append(current_line)
+                current_line = word
+            else:
+                if current_line:
+                    current_line += ' ' + word
+                else:
+                    current_line = word
+        if current_line:
+            lines.append(current_line)
+
+        return lines
+
+    def creating_diplomas_for_users(self):
+        """
+        Метод создает дипломы для пользователей на основе введенных данных и
+        шаблона изображения.
+
+        Возвращает:
+        None: Метод не возвращает значения, результат сохраняется в виде файлов
+        изображений.
+        """
         x = self.num1_input.text()
         kid = self.num2_input.text()
         place = self.num3_input.text()
@@ -290,34 +412,6 @@ class Window(QMainWindow):
         size3 = self.size_combo3.currentText()
         size4 = self.size_combo4.currentText()
 
-        self.creating_diplomas_for_users(x, kid, place, teacher, school,
-                                         font_name, font_name2, font_name3,
-                                         font_name4, size1, size2, size3,
-                                         size4)
-
-    def split_text(self, text):
-        words = text.split(' ')
-        lines = []
-        current_line = ''
-
-        for word in words:
-            if len(current_line) + len(word) + 1 > 25:
-                lines.append(current_line)
-                current_line = word
-            else:
-                if current_line:
-                    current_line += ' ' + word
-                else:
-                    current_line = word
-
-        if current_line:
-            lines.append(current_line)
-
-        return lines
-
-    def creating_diplomas_for_users(self, x, kid, place, teacher, school, font_name,
-                    font_name2, font_name3, font_name4, size1, size2, size3,
-                    size4):
         x = float(x)
         kid = float(kid)
         place = float(place)
@@ -369,10 +463,10 @@ class Window(QMainWindow):
                 'Полное наименование образовательного учреждения'].replace(
                 "\n", " ")
 
-            author_lines = self.split_text(author_name, font, size1)
-            place_lines = self.split_text(place_name, font2, size2)
-            teacher_lines = self.split_text(teacher_name, font3, size3)
-            school_lines = self.split_text(school_name, font4, size4)
+            author_lines = self.split_text(author_name)
+            place_lines = self.split_text(place_name)
+            teacher_lines = self.split_text(teacher_name)
+            school_lines = self.split_text(school_name)
 
             y = kid
             for line in author_lines:
@@ -424,6 +518,20 @@ class Window(QMainWindow):
         self.text6.show()
 
     def selecting_documents_for_the_city(self):
+        """
+        Метод отображает интерфейс для выбора документов и папки для сохранения.
+
+        Атрибуты:
+        self.text21 : QLabel - текстовое поле для вывода информации
+        пользователю.
+        self.btn4 : QPushButton - кнопка для выбора Word файла.
+        self.btn5 : QPushButton - кнопка для выбора Excel файла.
+        self.btn6 : QPushButton - кнопка для выбора папки для сохранения.
+        self.btn7 : QPushButton - кнопка для продолжения к следующему шагу.
+
+        Возвращает:
+        None
+        """
         self.text.hide()
         self.btn.hide()
         self.btn2.hide()
@@ -461,6 +569,15 @@ class Window(QMainWindow):
         self.btn7.show()
 
     def load_word_file(self):
+        """
+        Загружает Word файл с помощью диалогового окна выбора файла.
+
+        Использует QFileDialog для выбора файла с расширением .docx.
+        После выбора отображает путь к выбранному файлу в QLabel.
+
+        Возвращает:
+        None
+        """
         self.word_file, _ = QFileDialog.getOpenFileName(self,
                                                         "Выберите Word файл",
                                                         "",
@@ -471,6 +588,14 @@ class Window(QMainWindow):
         self.text24.show()
 
     def creating_diplomas_for_city(self):
+        """
+        Метод создает дипломы для пользователей на основе данных из Excel файла
+        и шаблона Word документа.
+
+        Возвращает:
+        None: Метод не возвращает значения, результат сохраняется в виде файлов
+        Word.
+        """
         data = pd.read_excel(self.excel_file)
         folder = self.save_folder
 
@@ -531,6 +656,12 @@ class Window(QMainWindow):
 
 
 def application():
+    """
+    Инициализирует и запускает приложение Qt.
+
+    Возвращает:
+    None: Функция не возвращает значений, управляет жизнью приложения.
+    """
     app = QApplication(sys.argv)
     app.setStyleSheet('QLabel { font: bold }')
     win = Window()
