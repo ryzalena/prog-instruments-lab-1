@@ -477,22 +477,22 @@ class Window(QMainWindow):
 
             y = place
             for line in place_lines:
-                _, _, _, height = draw.textbbox((0, 0), line, font=font)
-                draw.text((x, y), line, anchor="ms", font=font,
+                _, _, _, height = draw.textbbox((0, 0), line, font=font2)
+                draw.text((x, y), line, anchor="ms", font=font2,
                           fill="black")
                 y += height
 
             y = teacher
             for line in teacher_lines:
-                _, _, _, height = draw.textbbox((0, 0), line, font=font)
-                draw.text((x, y), line, anchor="ms", font=font,
+                _, _, _, height = draw.textbbox((0, 0), line, font=font3)
+                draw.text((x, y), line, anchor="ms", font=font3,
                           fill="black")
                 y += height
 
             y = school
             for line in school_lines:
-                _, _, _, height = draw.textbbox((0, 0), line, font=font)
-                draw.text((x, y), line, anchor="ms", font=font,
+                _, _, _, height = draw.textbbox((0, 0), line, font=font4)
+                draw.text((x, y), line, anchor="ms", font=font4,
                           fill="black")
                 y += height
 
