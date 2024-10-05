@@ -359,7 +359,6 @@ class Window(QMainWindow):
                             fonts.append(os.path.join(root, file))
         return fonts
 
-
     def split_text(self, text):
         """
         Метод для раздела заданного текста на строки, у которых длина не
